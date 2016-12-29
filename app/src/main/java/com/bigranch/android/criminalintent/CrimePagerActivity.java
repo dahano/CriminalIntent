@@ -14,7 +14,9 @@ import java.util.UUID;
 
 
 public class CrimePagerActivity extends FragmentActivity {
+
     private static final String EXTRA_CRIME_ID = "crime.bignerdranch.android.criminalintent.crime_id";
+
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
 
@@ -47,5 +49,13 @@ public class CrimePagerActivity extends FragmentActivity {
                 return mCrimes.size();
             }
         });
+
+        for(int i=0; i< mCrimes.size(); i++){
+            if(mCrimes.get(i).getId().equals(criminalId)){
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
+
     }
 }
