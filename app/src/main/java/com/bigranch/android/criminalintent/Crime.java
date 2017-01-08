@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Crime {
     private UUID mId;
     private String mTitle;
-    private Date mDate;
+    private Date mDate, mTime;
     private Boolean mSolved;
 
     public Crime(){
@@ -19,19 +19,19 @@ public class Crime {
     }
 
     public Date getDate() {
-
         return mDate;
-    }
-
-    public String getFormattedDate(){
-        mDate = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
-        String dateToday = simpleDateFormat.format(mDate);
-        return dateToday;
     }
 
     public void setDate(Date date) {
         mDate = date;
+    }
+
+    public Date getTime() {
+        return mTime;
+    }
+
+    public void setTime(Date time) {
+        mTime = time;
     }
 
     public Boolean getSolved() {

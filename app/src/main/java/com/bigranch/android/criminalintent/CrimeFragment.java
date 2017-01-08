@@ -1,12 +1,15 @@
 package com.bigranch.android.criminalintent;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +17,26 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment{
     private static final String ARG_CRIME_ID = "crime_id";
+
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "time";
+
+    private static final int REQUEST_TIME = 1;
     private static final int REQUEST_DATE = 0;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
     
     public static CrimeFragment newInstance(UUID crimeId){
@@ -82,6 +92,19 @@ public class CrimeFragment extends Fragment{
             }
         });
 
+        mTimeButton = (Button)v.findViewById(R.id.crime_time);
+        updateTime();
+        mTimeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment timeDialog = TimePickerFragment
+                        .newInstance(mCrime.getDate());
+                timeDialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                timeDialog.show(manager, DIALOG_TIME);
+            }
+        });
+
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.getSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -90,7 +113,6 @@ public class CrimeFragment extends Fragment{
                 mCrime.setSolved(isChecked);
             }
         });
-
         return v;
     }
 
@@ -105,11 +127,25 @@ public class CrimeFragment extends Fragment{
             mCrime.setDate(date);
             updateDate();
         }
+        if (requestCode == REQUEST_TIME){
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            mCrime.setDate(date);
+            updateTime();
+
+        }
     }
 
     private void updateDate() {
         DateFormat format = DateFormat.getDateInstance();
         String dateChange = format.format(mCrime.getDate());
         mDateButton.setText(dateChange);
+    }
+
+    private void updateTime(){
+        Time time = new Time();
+        time.set(mCrime.getDate().getTime());
+
+        String timeFormat = time.format("%k:%M");
+        mTimeButton.setText(timeFormat);
     }
 }
