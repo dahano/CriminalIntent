@@ -26,15 +26,10 @@ public class Crime {
         mDate = date;
     }
 
-    public Date getTime() {
-        return mTime;
-    }
-
-    public void setTime(Date time) {
-        mTime = time;
-    }
-
-    public Boolean getSolved() {
+    public Boolean isSolved() {
+        if(mSolved == null){
+            mSolved = false;
+        }
         return mSolved;
     }
 
