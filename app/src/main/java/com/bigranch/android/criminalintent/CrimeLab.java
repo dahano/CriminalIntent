@@ -1,30 +1,37 @@
 package com.bigranch.android.criminalintent;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.bigranch.android.criminalintent.database.CrimeBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
-    private static CrimeLab sCrimelab;
+    private static CrimeLab mCrimelab;
     private List<Crime> mCrimes;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
+
 
     public static CrimeLab get(Context context){
-        if(sCrimelab == null){
-            sCrimelab = new CrimeLab(context);
+        if(mCrimelab == null){
+            mCrimelab = new CrimeLab(context);
         }
-        return sCrimelab;
+        return mCrimelab;
     }
 
     public CrimeLab(Context context){
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext)
+                .getWritableDatabase();
         mCrimes = new ArrayList<>();
-        for(int i = 0; i <100; i++){
-            Crime crime = new Crime();
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i % 2 == 0);
-            mCrimes.add(crime);
-        }
+    }
+
+    public void addCrime(Crime c){
+        mCrimes.add(c);
     }
 
     public List<Crime> getCrimes(){
@@ -39,5 +46,7 @@ public class CrimeLab {
        }
         return null;
     }
+
+
 
 }
