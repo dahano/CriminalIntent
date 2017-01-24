@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,14 @@ public class CrimeFragment extends Fragment{
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
     }
 
     @Override
@@ -106,11 +115,13 @@ public class CrimeFragment extends Fragment{
         });
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
-        mSolvedCheckBox.setChecked(mCrime.getSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
+        mSolvedCheckBox
+                .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+
             }
         });
         return v;
@@ -144,8 +155,7 @@ public class CrimeFragment extends Fragment{
     private void updateTime(){
         Time time = new Time();
         time.set(mCrime.getDate().getTime());
-
-        String timeFormat = time.format("%k:%M");
+        String timeFormat = time.format("%k:%M ");
         mTimeButton.setText(timeFormat);
     }
 }
