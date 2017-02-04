@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -46,9 +48,10 @@ public class CrimeFragment extends Fragment{
     private Button mReportButton;
     private Button mSuspectButton;
     private CheckBox mSolvedCheckBox;
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
 
-    
     public static CrimeFragment newInstance(UUID crimeId){
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
@@ -147,7 +150,6 @@ public class CrimeFragment extends Fragment{
             }
         });
 
-
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
         ContactsContract.Contacts.CONTENT_URI);
 
@@ -167,6 +169,9 @@ public class CrimeFragment extends Fragment{
                 PackageManager.MATCH_DEFAULT_ONLY)==null){
             mSuspectButton.setEnabled(false);
         }
+
+        mPhotoButton = (ImageButton) v.findViewById(R.id.crime_camera);
+        mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
 
         return v;
     }
